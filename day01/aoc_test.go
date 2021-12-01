@@ -16,16 +16,16 @@ func TestAOC_parseInput(t *testing.T) {
 }
 
 func TestAOC_getSolutionPart1(t *testing.T) {
-	input := []int{0,3,4,42,106,107,267,269}
-	expectedSolution := 3*1 + 107*5 + 269*7
+	input := []int{199,200,208,210,200,207,240,269,260,263}
+	expectedSolution := 7
 
 	actualSolution := getSolutionPart1(input)
 	assert.Equal(t, expectedSolution, actualSolution)
 }
 
 func TestAOC_getSolutionPart2(t *testing.T) {
-	input := []int{0,3,4,42,106,107,267,269}
-	expectedSolution := 0 + 4 - 42 + 106 + 267
+	input := []int{199,200,208,210,200,207,240,269,260,263}
+	expectedSolution := 5
 
 	actualSolution := getSolutionPart2(input)
 	assert.Equal(t, expectedSolution, actualSolution)

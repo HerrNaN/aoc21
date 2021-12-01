@@ -3,43 +3,27 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"math"
 	"os"
 	"strconv"
 	"strings"
 )
 
 func getSolutionPart1(input []int) int {
-	sum := 0
-	for i, value := range input {
-		if IsPrime(value) {
-			sum += i * value
+	increases := 0
+	for i := 1; i < len(input); i++ {
+		if input[i-1] < input[i] {
+			increases++
 		}
 	}
-	return sum
-}
-
-func IsPrime(n int) bool {
-    for i := 2; i <= int(math.Floor(math.Sqrt(float64(n)))); i++ {
-        if n%i == 0 {
-            return false
-        }
-    }
-    return n > 1
+	return increases
 }
 
 func getSolutionPart2(input []int) int {
-	sum := 0
-	for i, value := range input {
-		if !IsPrime(value) {
-			if i%2 == 0 {
-				sum += value
-			} else {
-				sum -= value
-			}
-		}
+	windows := make([]int, len(input)-2)
+	for i := 2; i < len(input); i++ {
+		windows[i-2] = input[i] + input[i-1] + input[i-2]
 	}
-	return sum
+	return getSolutionPart1(windows)
 }
 
 func parseInput(input string) ([]int, error) {
