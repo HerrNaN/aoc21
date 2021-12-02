@@ -62,15 +62,19 @@ func parseInput(input string) ([]command, error) {
 	return parsed, nil
 }
 
-func main() {
+func readInput() ([]command, error) {
 	inputBytes, err := ioutil.ReadFile("input.txt")
 	if err != nil {
 		panic("couldn't read input")
 	}
 
-	input, err := parseInput(string(inputBytes))
+	return parseInput(string(inputBytes))
+}
+
+func main() {
+	input, err := readInput()
 	if err != nil {
-		panic("couldn't parse input")
+		panic(err)
 	}
 
 	fmt.Println("Go")
