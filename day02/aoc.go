@@ -77,7 +77,6 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println("Go")
 	part := os.Getenv("part")
 
 	if part == "part2" {
