@@ -37,11 +37,11 @@ func TestAOC_parseInput(t *testing.T) {
 }
 
 func TestAOC_covered(t *testing.T) {
-	assert.Equal(t, []Point{{1,2},{1,3},{1,4}}, covers(Point{1,2}, Point{1,4}, false))
-	assert.Equal(t, []Point{{2,1},{3,1},{4,1}}, covers(Point{2,1}, Point{4,1}, false))
-	assert.Equal(t, []Point{{1,-2},{1,-3},{1,-4}}, covers(Point{1,-2}, Point{1,-4}, false))
-	assert.Equal(t, []Point{{-2,1},{-3,1},{-4,1}}, covers(Point{-2,1}, Point{-4,1}, false))
-	assert.Equal(t, []Point{{9,7},{8,8},{7,9}}, covers(Point{9,7}, Point{7,9}, true))
+	assert.Equal(t, []Point{{1,2},{1,3},{1,4}}, covers(Point{1,2}, Point{1,4}))
+	assert.Equal(t, []Point{{2,1},{3,1},{4,1}}, covers(Point{2,1}, Point{4,1}))
+	assert.Equal(t, []Point{{1,-2},{1,-3},{1,-4}}, covers(Point{1,-2}, Point{1,-4}))
+	assert.Equal(t, []Point{{-2,1},{-3,1},{-4,1}}, covers(Point{-2,1}, Point{-4,1}))
+	assert.Equal(t, []Point{{9,7},{8,8},{7,9}}, covers(Point{9,7}, Point{7,9}))
 }
 
 func TestAOC_getSolutionPart1(t *testing.T) {

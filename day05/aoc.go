@@ -17,9 +17,13 @@ func getSolutionPart1(vs Vents) int {
 	covered := make(map[Point]int)
 
 	for _, v := range vs {
-		traversed := covers(v.from, v.to, false)
+		if v.isDiagonal() {
+			continue
+		}
+
+		traversed := covers(v.from, v.to)
 		for _, p := range traversed {
-			covered[p] = covered[p] + 1
+			covered[p]++
 		}
 	}
 
@@ -33,53 +37,42 @@ func getSolutionPart1(vs Vents) int {
 	return sum
 }
 
-func covers(from, to Point, wantDiagonals bool) []Point {
+func (v Vent) isDiagonal() bool {
+	return v.to.x != v.from.x && v.to.y != v.from.y
+}
+
+func covers(from, to Point) []Point {
 	dX := to.x - from.x
 	dY := to.y - from.y
 
-	var points []Point
-	if dX == 0  {
-		if dY > 0 {
-			for i := 0; i <= dY; i++ {
-				points = append(points, Point{from.x, from.y+i})
-			}
-		} else if dY < 0 {
-			for i := 0; i >= dY; i-- {
-				points = append(points, Point{from.x, from.y+i})
-			}
-		}
-	} else if dY == 0 {
-		if dX > 0 {
-			for i := 0; i <= dX; i++ {
-				points = append(points, Point{from.x+i, from.y})
-			}
-		} else if dX < 0 {
-			for i := 0; i >= dX; i-- {
-				points = append(points, Point{from.x+i, from.y})
-			}
-		}
-	} else if wantDiagonals {
-		for i := 0; i <= int(math.Abs(float64(dX))); i++ {
-			points = append(points, Point{from.x+(i*sign(dX)), from.y+(i*sign(dY))})
+	nPoints := 1 + int(math.Max(math.Abs(float64(dX)), math.Abs(float64(dY))))
+	points := make([]Point, nPoints)
+
+	for i := 0; i < nPoints; i++ {
+		points[i] = Point{
+			x: from.x + (i*multiplier(dX)),
+			y: from.y + (i*multiplier(dY)),
 		}
 	}
 
 	return points
 }
 
-func sign(i int) int {
+func multiplier(i int) int {
 	if i < 0 {
 		return -1
+	} else if i == 0 {
+		return 0
+	} else {
+		return 1
 	}
-
-	return 1
 }
 
 func getSolutionPart2(vs Vents) int {
 	covered := make(map[Point]int)
 
 	for _, v := range vs {
-		traversed := covers(v.from, v.to, true)
+		traversed := covers(v.from, v.to)
 		for _, p := range traversed {
 			covered[p] = covered[p] + 1
 		}
