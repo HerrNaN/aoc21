@@ -1,4 +1,4 @@
-module cygni.se/aoc
+module github.com/herrnan/aoc21
 
 go 1.17
 
