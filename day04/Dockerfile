@@ -1,6 +1,6 @@
 FROM golang:1.17-alpine as BASE
 WORKDIR /src
-COPY go/ .
+COPY . .
 RUN go build -o /bin/aoc
 
 FROM scratch
