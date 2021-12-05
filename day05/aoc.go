@@ -14,7 +14,8 @@ type Vent struct{ from, to Point }
 type Vents []Vent
 
 func getSolutionPart1(vs Vents) int {
-	covered := make(map[Point]int)
+	covered := [1000][1000]int{}
+	sum := 0
 
 	for _, v := range vs {
 		if v.isDiagonal() {
@@ -23,14 +24,10 @@ func getSolutionPart1(vs Vents) int {
 
 		traversed := covers(v.from, v.to)
 		for _, p := range traversed {
-			covered[p]++
-		}
-	}
-
-	sum := 0
-	for _, p := range covered {
-		if p >= 2 {
-			sum++
+			covered[p.x][p.y]++
+			if covered[p.x][p.y] == 2 {
+				sum++
+			}
 		}
 	}
 
@@ -69,19 +66,16 @@ func multiplier(i int) int {
 }
 
 func getSolutionPart2(vs Vents) int {
-	covered := make(map[Point]int)
+	covered := [1000][1000]int{}
+	sum := 0
 
 	for _, v := range vs {
 		traversed := covers(v.from, v.to)
 		for _, p := range traversed {
-			covered[p] = covered[p] + 1
-		}
-	}
-
-	sum := 0
-	for _, p := range covered {
-		if p >= 2 {
-			sum++
+			covered[p.x][p.y]++
+			if covered[p.x][p.y] == 2 {
+				sum++
+			}
 		}
 	}
 
