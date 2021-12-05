@@ -9,8 +9,8 @@ import (
 	"strings"
 )
 
-type Point struct { x,y int }
-type Vent struct { from, to Point }
+type Point struct{ x, y int }
+type Vent struct{ from, to Point }
 type Vents []Vent
 
 func getSolutionPart1(vs Vents) int {
@@ -50,8 +50,8 @@ func covers(from, to Point) []Point {
 
 	for i := 0; i < nPoints; i++ {
 		points[i] = Point{
-			x: from.x + (i*multiplier(dX)),
-			y: from.y + (i*multiplier(dY)),
+			x: from.x + (i * multiplier(dX)),
+			y: from.y + (i * multiplier(dY)),
 		}
 	}
 
@@ -59,13 +59,13 @@ func covers(from, to Point) []Point {
 }
 
 func multiplier(i int) int {
-	if i < 0 {
-		return -1
-	} else if i == 0 {
+	if i == 0 {
 		return 0
-	} else {
+	}
+	if i > 0 {
 		return 1
 	}
+	return -1
 }
 
 func getSolutionPart2(vs Vents) int {
@@ -94,7 +94,7 @@ func parseInput(input string) Vents {
 
 	var vents Vents
 	for _, line := range split {
-		pointStrings := strings.Split(line," -> ")
+		pointStrings := strings.Split(line, " -> ")
 		from, to := parsePoint(pointStrings[0]), parsePoint(pointStrings[1])
 		vents = append(vents, Vent{from, to})
 	}
@@ -106,7 +106,7 @@ func parsePoint(input string) Point {
 	split := strings.Split(input, ",")
 	x, _ := strconv.Atoi(split[0])
 	y, _ := strconv.Atoi(split[1])
-	return Point{x,y}
+	return Point{x, y}
 }
 
 func readInput() Vents {
