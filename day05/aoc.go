@@ -11,14 +11,21 @@ import (
 
 type Point struct{ x, y int }
 type Vent struct{ from, to Point }
-type Vents []Vent
 
-func getSolutionPart1(vs Vents) int {
+func getSolutionPart1(vs []Vent) int {
+	return solve(vs, true)
+}
+
+func getSolutionPart2(vs []Vent) int {
+	return solve(vs, false)
+}
+
+func solve(vs []Vent, ignoreDiagonals bool) int {
 	covered := [1000][1000]int{}
 	sum := 0
 
 	for _, v := range vs {
-		if v.isDiagonal() {
+		if ignoreDiagonals && v.isDiagonal() {
 			continue
 		}
 
@@ -65,28 +72,11 @@ func multiplier(i int) int {
 	return -1
 }
 
-func getSolutionPart2(vs Vents) int {
-	covered := [1000][1000]int{}
-	sum := 0
-
-	for _, v := range vs {
-		traversed := covers(v.from, v.to)
-		for _, p := range traversed {
-			covered[p.x][p.y]++
-			if covered[p.x][p.y] == 2 {
-				sum++
-			}
-		}
-	}
-
-	return sum
-}
-
-func parseInput(input string) Vents {
+func parseInput(input string) []Vent {
 	input = strings.TrimSpace(input)
 	split := strings.Split(input, "\n")
 
-	var vents Vents
+	var vents []Vent
 	for _, line := range split {
 		pointStrings := strings.Split(line, " -> ")
 		from, to := parsePoint(pointStrings[0]), parsePoint(pointStrings[1])
@@ -103,7 +93,7 @@ func parsePoint(input string) Point {
 	return Point{x, y}
 }
 
-func readInput() Vents {
+func readInput() []Vent {
 	inputBytes, err := ioutil.ReadFile("input.txt")
 	if err != nil {
 		panic("couldn't read input")

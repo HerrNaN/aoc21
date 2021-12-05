@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var input = Vents([]Vent{
+var input = []Vent{
 	{ Point{0, 9}, Point{5, 9} },
 	{ Point{8, 0}, Point{0, 8} },
 	{ Point{9, 4}, Point{3, 4} },
@@ -17,7 +17,7 @@ var input = Vents([]Vent{
 	{ Point{3, 4}, Point{1, 4} },
 	{ Point{0, 0}, Point{8, 8} },
 	{ Point{5, 5}, Point{8, 2} },
-})
+}
 
 func TestAOC_parseInput(t *testing.T) {
 	inputString := `0,9 -> 5,9
