@@ -18,15 +18,19 @@ func TestAOC_parseInput(t *testing.T) {
 
 func TestAOC_getSolutionPart1(t *testing.T) {
 	expectedSolution := 5934
+	is := make([]int,9)
+	copy(is, input)
 
-	actualSolution := getSolutionPart1(input)
+	actualSolution := getSolutionPart1(is)
 	assert.Equal(t, expectedSolution, actualSolution)
 }
 
 func TestAOC_getSolutionPart2(t *testing.T) {
 	expectedSolution := 26984457539
+	is := make([]int,9)
+	copy(is, input)
 
-	actualSolution := getSolutionPart2(input)
+	actualSolution := getSolutionPart2(is)
 	assert.Equal(t, expectedSolution, actualSolution)
 }
 
