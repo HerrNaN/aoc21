@@ -65,7 +65,7 @@ func getSolutionPart2(grid [][]int) int {
 }
 
 func neighbourValues(row, col int, grid [][]int) []int {
-	var neighbours []int
+	neighbours := make([]int,0,4)
 
 	if row > 0 {
 		neighbours = append(neighbours, grid[row-1][col])

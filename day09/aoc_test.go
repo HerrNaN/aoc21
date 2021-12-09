@@ -47,9 +47,8 @@ func Benchmark_Parse(b *testing.B) {
 func Benchmark_Part1(b *testing.B) {
 	b.ReportAllocs()
 
-	input := readInput()
-
 	for i := 0; i < b.N; i++ {
+		input := readInput()
 		getSolutionPart1(input)
 	}
 }
@@ -57,9 +56,9 @@ func Benchmark_Part1(b *testing.B) {
 func Benchmark_Part2(b *testing.B) {
 	b.ReportAllocs()
 
-	input := readInput()
 
 	for i := 0; i < b.N; i++ {
+		input := readInput()
 		getSolutionPart2(input)
 	}
 }
