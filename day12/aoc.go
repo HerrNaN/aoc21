@@ -12,35 +12,33 @@ const (
 	CaveNameEnd   = "end"
 )
 
-type CaveMap map[string][]string
+type Cave string
+type CaveMap map[Cave][]Cave
 
 func getSolutionPart1(m CaveMap) int {
 	return m.numUniquePaths(true)
 }
 
 func (m CaveMap) numUniquePaths(disallowVisitTwice bool) int {
-	return len(m.uniquePathsFrom(CaveNameStart, make(map[string]bool), disallowVisitTwice))
+	return len(m.uniquePathsFrom(CaveNameStart, []Cave{}, disallowVisitTwice))
 }
 
-func (m CaveMap) uniquePathsFrom(cave string, visited map[string]bool, visitedSmallCaveTwice bool) [][]string {
+func (m CaveMap) uniquePathsFrom(cave Cave, visited []Cave, visitedSmallCaveTwice bool) [][]Cave {
 	if cave == CaveNameEnd {
-		return [][]string{{CaveNameEnd}}
+		return [][]Cave{{CaveNameEnd}}
 	}
 
-	if isSmall(cave) && visited[cave] {
-		if cave == CaveNameStart || visitedSmallCaveTwice {
+	if cave.isSmall() && contains(visited, cave) {
+		if visitedSmallCaveTwice || cave == CaveNameStart {
 			return nil
 		}
 
 		visitedSmallCaveTwice = true
 	}
 
-	visited[cave] = true
-
-
-	var paths [][]string
+	paths := make([][]Cave, 0, len(m[cave]))
 	for _, nextCave := range m[cave] {
-		paths = append(paths, m.uniquePathsFrom(nextCave, copyMap(visited), visitedSmallCaveTwice)...)
+		paths = append(paths, m.uniquePathsFrom(nextCave, append(visited, cave), visitedSmallCaveTwice)...)
 	}
 
 	for i := range paths {
@@ -50,16 +48,17 @@ func (m CaveMap) uniquePathsFrom(cave string, visited map[string]bool, visitedSm
 	return paths
 }
 
-func isSmall(s string) bool {
-	return s == strings.ToLower(s)
+func (c Cave) isSmall() bool {
+	return string(c) == strings.ToLower(string(c))
 }
 
-func copyMap(src map[string]bool) map[string]bool {
-	dst := make(map[string]bool)
-	for k, v := range src {
-		dst[k] = v
+func contains(ss []Cave, s Cave) bool {
+	for i := range ss {
+		if ss[i] == s {
+			return true
+		}
 	}
-	return dst
+	return false
 }
 
 func getSolutionPart2(m CaveMap) int {
@@ -68,11 +67,11 @@ func getSolutionPart2(m CaveMap) int {
 
 func parseInput(input string) CaveMap {
 	input = strings.TrimSpace(input)
-	m := make(map[string][]string)
+	m := make(map[Cave][]Cave)
 	for _, line := range strings.Split(input, "\n") {
 		splits := strings.Split(line, "-")
-		m[splits[0]] = append(m[splits[0]], splits[1])
-		m[splits[1]] = append(m[splits[1]], splits[0])
+		m[Cave(splits[0])] = append(m[Cave(splits[0])], Cave(splits[1]))
+		m[Cave(splits[1])] = append(m[Cave(splits[1])], Cave(splits[0]))
 	}
 	return m
 }

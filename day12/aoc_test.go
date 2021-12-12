@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var input = CaveMap(map[string][]string{
+var input = CaveMap(map[Cave][]Cave{
 	"fs": {"end", "he", "DX", "pj"},
 	"end": {"fs", "zg"},
 	"he": {"DX", "fs", "pj", "RW", "WI", "zg"},
