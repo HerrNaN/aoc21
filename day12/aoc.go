@@ -16,7 +16,7 @@ type Cave string
 type CaveMap map[Cave][]Cave
 
 func getSolutionPart1(m CaveMap) int {
-	return m.numUniquePathsFrom(CaveNameStart, []Cave{}, true)
+	return m.numUniquePathsFrom(CaveNameStart, make([]Cave,0,20), true)
 }
 
 func (m CaveMap) numUniquePathsFrom(cave Cave, visited []Cave, visitedSmallCaveTwice bool) int {
@@ -41,7 +41,7 @@ func (m CaveMap) numUniquePathsFrom(cave Cave, visited []Cave, visitedSmallCaveT
 }
 
 func (c Cave) isSmall() bool {
-	return string(c) == strings.ToLower(string(c))
+	return c[0] >= 97
 }
 
 func contains(ss []Cave, s Cave) bool {
@@ -54,7 +54,7 @@ func contains(ss []Cave, s Cave) bool {
 }
 
 func getSolutionPart2(m CaveMap) int {
-	return m.numUniquePathsFrom(CaveNameStart, []Cave{}, false)
+	return m.numUniquePathsFrom(CaveNameStart, make([]Cave,0,20), false)
 }
 
 func parseInput(input string) CaveMap {
