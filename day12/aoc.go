@@ -16,33 +16,25 @@ type Cave string
 type CaveMap map[Cave][]Cave
 
 func getSolutionPart1(m CaveMap) int {
-	return m.numUniquePaths(true)
+	return m.numUniquePathsFrom(CaveNameStart, []Cave{}, true)
 }
 
-func (m CaveMap) numUniquePaths(disallowVisitTwice bool) int {
-	return len(m.uniquePathsFrom(CaveNameStart, []Cave{}, disallowVisitTwice))
-}
-
-func (m CaveMap) uniquePathsFrom(cave Cave, visited []Cave, visitedSmallCaveTwice bool) [][]Cave {
+func (m CaveMap) numUniquePathsFrom(cave Cave, visited []Cave, visitedSmallCaveTwice bool) int {
 	if cave == CaveNameEnd {
-		return [][]Cave{{CaveNameEnd}}
+		return 1
 	}
 
 	if cave.isSmall() && contains(visited, cave) {
 		if visitedSmallCaveTwice || cave == CaveNameStart {
-			return nil
+			return 0
 		}
 
 		visitedSmallCaveTwice = true
 	}
 
-	paths := make([][]Cave, 0, len(m[cave]))
-	for _, nextCave := range m[cave] {
-		paths = append(paths, m.uniquePathsFrom(nextCave, append(visited, cave), visitedSmallCaveTwice)...)
-	}
-
-	for i := range paths {
-		paths[i] = append(paths[i], cave)
+	paths := 0
+	for i := range m[cave] {
+		paths += m.numUniquePathsFrom(m[cave][i], append(visited, cave), visitedSmallCaveTwice)
 	}
 
 	return paths
@@ -62,7 +54,7 @@ func contains(ss []Cave, s Cave) bool {
 }
 
 func getSolutionPart2(m CaveMap) int {
-	return m.numUniquePaths(false)
+	return m.numUniquePathsFrom(CaveNameStart, []Cave{}, false)
 }
 
 func parseInput(input string) CaveMap {
