@@ -1,5 +1,11 @@
+days := $(addprefix run-docker-,$(wildcard day*))
+
+PHONY: run-all
+run-all: $(days)
+
 PHONY: run-docker-%
 run-docker-%: build-docker-%
+	@echo $(@:run-docker-%=%)
 	@echo "Part1:"
 	@docker run -e part=part1 herrnan/aoc-go-$(@:run-docker-%=%)
 	@echo "Part2:"
