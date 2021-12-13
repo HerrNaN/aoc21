@@ -67,7 +67,7 @@ fold along x=5
 }
 
 func TestAOC_getSolutionPart1(t *testing.T) {
-	expectedSolution := 226
+	expectedSolution := 17
 	actualSolution := getSolutionPart1(input)
 	assert.Equal(t, expectedSolution, actualSolution)
 }
