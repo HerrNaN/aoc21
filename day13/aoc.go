@@ -38,42 +38,32 @@ func (m *Manual) foldAll() {
 
 func (paper Paper) doFold(f Fold) {
 	for p := range paper {
-		if f.shouldMove(p) {
+		if np, ok := foldedPoint(f, p); ok {
 			delete(paper, p)
-			paper[f.newPoint(p)] = true
+			paper[np] = true
 		}
 	}
 }
 
-func (f Fold) shouldMove(p Point) bool {
+func foldedPoint(f Fold, p Point) (Point, bool) {
 	if f.foldType == FoldTypeHorizontal {
-		return p.y > f.place
+		return Point{p.x, p.y - 2*(p.y-f.place)}, p.y > f.place
 	}
-	return p.x > f.place
+	return Point{p.x - 2*(p.x-f.place), p.y}, p.x > f.place
 }
 
-func (f Fold) newPoint(p Point) Point {
-	if f.foldType == FoldTypeHorizontal {
-		return Point{p.x, p.y - 2*(p.y-f.place)}
-	}
-	return Point{p.x - 2*(p.x-f.place), p.y}
+func getSolutionPart2(m Manual) string {
+	m.foldAll()
+	return m.code()
 }
 
 func (m *Manual) code() string {
-	bs := bytes.Buffer{}
-	var maxX, maxY int
-	for p := range m.paper {
-		if p.x > maxX {
-			maxX = p.x
-		}
-		if p.y > maxY {
-			maxY = p.y
-	 	}
-	}
+	maxX, maxY := m.paper.limits()
 
+	bs := bytes.Buffer{}
 	for y := 0; y <= maxY; y++ {
 		for x := 0; x <= maxX; x++ {
-			if m.paper[Point{x,y}] {
+			if m.paper[Point{x, y}] {
 				bs.WriteByte(byte('#'))
 			} else {
 				bs.WriteByte(byte(' '))
@@ -84,9 +74,17 @@ func (m *Manual) code() string {
 	return bs.String()
 }
 
-func getSolutionPart2(m Manual) string {
-	m.foldAll()
-	return m.code()
+func (paper Paper) limits() (int, int) {
+	var maxX, maxY int
+	for p := range paper {
+		if p.x > maxX {
+			maxX = p.x
+		}
+		if p.y > maxY {
+			maxY = p.y
+		}
+	}
+	return maxX, maxY
 }
 
 func parseInput(input string) Manual {
