@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"math"
@@ -59,7 +60,8 @@ func (m *Manual) doFold(f Fold) {
 	}
 }
 
-func (m *Manual) print() {
+func (m *Manual) code() string {
+	bs := bytes.Buffer{}
 	var maxX, maxY int
 	for p := range m.paper {
 		if p.x > maxX {
@@ -73,19 +75,19 @@ func (m *Manual) print() {
 	for y := 0; y <= maxY; y++ {
 		for x := 0; x <= maxX; x++ {
 			if m.paper[Point{x,y}] {
-				fmt.Print("#")
+				bs.WriteByte(byte('#'))
 			} else {
-				fmt.Print(" ")
+				bs.WriteByte(byte(' '))
 			}
 		}
-		fmt.Print("\n")
+		bs.WriteByte(byte('\n'))
 	}
+	return bs.String()
 }
 
-func getSolutionPart2(m Manual) int {
+func getSolutionPart2(m Manual) string {
 	m.foldAll()
-	m.print()
-	return 0
+	return m.code()
 }
 
 func parseInput(input string) Manual {
