@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
-	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -27,37 +26,37 @@ type Manual struct {
 }
 
 func getSolutionPart1(m Manual) int {
-	m.doFold(m.folds[0])
+	m.paper.doFold(m.folds[0])
 	return len(m.paper)
 }
 
 func (m *Manual) foldAll() {
 	for _, fold := range m.folds {
-		m.doFold(fold)
+		m.paper.doFold(fold)
 	}
 }
 
-func (m *Manual) doFold(f Fold) {
-	for p := range m.paper {
-		switch f.foldType {
-		case FoldTypeHorizontal:
-			if p.y <= f.place {
-				continue
-			}
-
-			delete(m.paper, p)
-			diff := int(math.Abs(float64(f.place - p.y)))
-			m.paper[Point{x: p.x, y: p.y - 2*diff}] = true
-		case FoldTypeVertical:
-			if p.x <= f.place {
-				continue
-			}
-
-			delete(m.paper, p)
-			diff := int(math.Abs(float64(f.place - p.x)))
-			m.paper[Point{x: p.x - 2*diff, y: p.y}] = true
+func (paper Paper) doFold(f Fold) {
+	for p := range paper {
+		if f.shouldMove(p) {
+			delete(paper, p)
+			paper[f.newPoint(p)] = true
 		}
 	}
+}
+
+func (f Fold) shouldMove(p Point) bool {
+	if f.foldType == FoldTypeHorizontal {
+		return p.y > f.place
+	}
+	return p.x > f.place
+}
+
+func (f Fold) newPoint(p Point) Point {
+	if f.foldType == FoldTypeHorizontal {
+		return Point{p.x, p.y - 2*(p.y-f.place)}
+	}
+	return Point{p.x - 2*(p.x-f.place), p.y}
 }
 
 func (m *Manual) code() string {
