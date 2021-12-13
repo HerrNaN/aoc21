@@ -16,7 +16,12 @@ build-docker-%:
 	@echo "Building docker image..."
 	@docker build -q $(@:build-docker-%=%) -t herrnan/aoc-go-$(@:build-docker-%=%) > /dev/null
 
-PHONY: bench-%
-bench-%:
-	go test ./$(@:bench-%=%)/... -bench=. -cpuprofile profile_cpu.out
+PHONY: bench-cpu-%
+bench-cpu-%:
+	go test ./$(@:bench-cpu-%=%)/... -bench=. -cpuprofile profile_cpu.out
 	go tool pprof -http :8081 profile_cpu.out
+
+PHONY: bench-mem-%
+bench-mem-%:
+	go test ./$(@:bench-mem-%=%)/... -bench=. -memprofile profile_mem.out
+	go tool pprof -http :8081 profile_mem.out
