@@ -8,35 +8,47 @@ import (
 	"strings"
 )
 
-type Template string
-type Rules map[string]rune
+type Rules map[string][2]string
 type Formula struct {
-	template Template
-	rules Rules
-}
-
-type Reaction struct {
-	step int
-	pair string
+	template string
+	polymer  map[string]int
+	rules    Rules
 }
 
 func getSolutionPart1(f Formula) int {
-	freqs := f.freqAfterSteps(10)
-	// fmt.Println(sum(freqs))
+	return f.solve(10)
+}
+
+func (f Formula) solve(n int) int {
+	last := rune(f.template[len(f.template)-1])
+	freqs := count(f.rules.stepN(n, f.polymer), last)
 	min, max := min(freqs), max(freqs)
 	return max - min
 }
 
-func (f Formula) freqAfterSteps(n int) map[rune]int {
-	m := make(map[rune]int)
-	for _, r := range f.template {
-		m[r]++
-	}
-	cache := make(map[Reaction]map[rune]int)
-	for i := 0; i < len(f.template)-1; i++ {
-		unionWith(m, f.rules.countReaction(Reaction{n, string(f.template)[i:i+2]}, cache), add)
+func (r Rules) stepN(n int, m map[string]int) map[string]int {
+	for i := 0; i < n; i++ {
+		m = r.step(m)
 	}
 	return m
+}
+
+func (r Rules) step(m map[string]int) map[string]int {
+	newMap := make(map[string]int)
+	for p, n := range m {
+		newMap[r[p][0]] += n
+		newMap[r[p][1]] += n
+	}
+	return newMap
+}
+
+func count(m map[string]int, last rune) map[rune]int {
+	counts := make(map[rune]int)
+	for p, n := range m {
+		counts[rune(p[0])] += n
+	}
+	counts[last]++
+	return counts
 }
 
 func max(m map[rune]int) int {
@@ -59,70 +71,26 @@ func min(m map[rune]int) int {
 	return n
 }
 
-func sum(m map[rune]int) int {
-	sum := 0
-	for _, v := range m {
-		sum += v
-	}
-	return sum
-}
-
-
-// Unions into m1
-func unionWith(m1,m2 map[rune]int, f func(int,int) int) {
-	if m1 == nil {
-		m1 = m2
-	} else if m2 != nil {
-		for k := range m2 {
-			m1[k] = f(m1[k],m2[k])
-		}
-	}
-}
-
-func add(a,b int) int {
-	return a+b
-}
-
-func (rules Rules) countReaction(r Reaction, cache map[Reaction]map[rune]int) map[rune]int {
-	// fmt.Println(r.pair)
-	if r.step == 0 {
-		return nil
-	}
-
-	if m, ok := cache[r]; ok {
-		return m
-	}
-
-	m := map[rune]int{
-		rules[r.pair]: 1,
-	}
-	ar := Reaction{r.step-1, string(rune(r.pair[0]))+string(rules[r.pair])}
-	a := rules.countReaction(ar, cache)
-	unionWith(m, a, add)
-
-	br := Reaction{r.step-1, string(rules[r.pair])+string(rune(r.pair[1]))}
-	b := rules.countReaction(br, cache)
-	unionWith(m, b, add)
-
-	cache[r] = m
-
-	return m
-}
-
 func getSolutionPart2(f Formula) int {
-	freqs := f.freqAfterSteps(40)
-	// fmt.Println(sum(freqs))
-	min, max := min(freqs), max(freqs)
-	return max - min
+	return f.solve(40)
 }
 
 func parseInput(input string) Formula {
 	input = strings.TrimSpace(input)
 	splits := strings.Split(input, "\n\n")
 	return Formula{
-		template: Template(splits[0]),
+		template: splits[0],
+		polymer:  parsePolymer(splits[0]),
 		rules:    parseRules(splits[1]),
 	}
+}
+
+func parsePolymer(input string) map[string]int {
+	m := make(map[string]int)
+	for i := 0; i < len(input)-1; i++ {
+		m[input[i:i+2]]++
+	}
+	return m
 }
 
 func parseRules(input string) Rules {
@@ -130,7 +98,10 @@ func parseRules(input string) Rules {
 	rules := make(Rules)
 	for _, line := range strings.Split(input, "\n") {
 		splits := strings.Split(line, " -> ")
-		rules[splits[0]] = rune(splits[1][0])
+		rules[splits[0]] = [2]string{
+			string(rune(splits[0][0])) + string(rune(splits[1][0])),
+			string(rune(splits[1][0])) + string(rune(splits[0][1])),
+		}
 	}
 	return rules
 }
