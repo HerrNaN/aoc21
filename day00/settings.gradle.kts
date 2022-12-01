@@ -1,3 +1,3 @@
 
-rootProject.name = "kotlinapp"
+rootProject.name = "day00"
 
